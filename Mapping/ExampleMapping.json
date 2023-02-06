@@ -16,7 +16,7 @@
         "betalingsindicatie": "SOAP-ENV:Body.ns2:zakLk01.ns2:object.ns2:betalingsindicatie",
         "laatsteBetaaldatum": "SOAP-ENV:Body.ns2:zakLk01.ns2:object.ns2:laatstebetaaldatum",
         "zaakniveau": "SOAP-ENV:Body.ns2:zakLk01.ns2:object.ns2:zaakniveau",
-        "deelzakenIndicatie": "SOAP-ENV:Body.ns2:zakLk01.ns2:object.ns2:deelzakenIndicatie",
+        "deelzakenIndicatie": "SOAP-ENV:Body.ns2:zakLk01.ns2:object.ns2:deelzakenIndicatie"
 
     }
 }
