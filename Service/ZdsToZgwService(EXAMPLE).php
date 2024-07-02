@@ -150,7 +150,7 @@ class ZdsToZgwService
         $mapping = $this->getMapping('https://zds.nl/mapping/zds.zdsZaakIdToZgwZaak.mapping.json');
 
         $zaakArray = $this->mappingService->mapping($mapping, $data['body']);
-        $zaken = $this->cacheService->searchObjects(null, ['identificatie' => $zaakArray['identificatie']], [$zaakEntity->getId()->toString()])['results'];
+        $zaken = $this->cacheService->searchObjects(['identificatie' => $zaakArray['identificatie']], [$zaakEntity->getId()->toString()])['results'];
         if ($zaken === []) {
             $this->logger->debug('Creating new case with identifier'.$zaakArray['identificatie']);
             $zaak = new ObjectEntity($zaakEntity);
@@ -188,7 +188,7 @@ class ZdsToZgwService
         $mapping = $this->getMapping('https://zds.nl/mapping/zds.zdsDocumentIdToZgwDocument.mapping.json');
 
         $documentArray = $this->mappingService->mapping($mapping, $data['body']);
-        $documents = $this->cacheService->searchObjects(null, ['identificatie' => $documentArray['identificatie']], [$documentEntity->getId()->toString()])['results'];
+        $documents = $this->cacheService->searchObjects(['identificatie' => $documentArray['identificatie']], [$documentEntity->getId()->toString()])['results'];
         if ($documents === []) {
             $this->logger->debug('Creating new document for identification'.$documentArray['identificatie']);
             $document = new ObjectEntity($documentEntity);
@@ -223,7 +223,7 @@ class ZdsToZgwService
         $eigenschapEntity = $this->getEntity('https://vng.opencatalogi.nl/schemas/ztc.eigenschap.schema.json');
         $eigenschapObjects = $zaakType->getValue('eigenschappen');
         foreach ($zaakArray['eigenschappen'] as $key => $eigenschap) {
-            $eigenschappen = $this->cacheService->searchObjects(null, ['naam' => $eigenschap['eigenschap']['naam'], 'zaaktype' => $zaakType->getSelf()], [$eigenschapEntity->getId()->toString()])['results'];
+            $eigenschappen = $this->cacheService->searchObjects(['naam' => $eigenschap['eigenschap']['naam'], 'zaaktype' => $zaakType->getSelf()], [$eigenschapEntity->getId()->toString()])['results'];
             if ($eigenschappen !== []) {
                 $this->logger->debug('Property has been found, connecting to property');
 
@@ -266,7 +266,7 @@ class ZdsToZgwService
         $rolTypeObjects = $zaakType->getValue('roltypen');
 
         foreach ($zaakArray['rollen'] as $key => $role) {
-            $rollen = $this->cacheService->searchObjects(null, ['omschrijvingGeneriek' => $role['roltype']['omschrijvingGeneriek'], 'zaaktype' => $zaakType->getSelf()], [$rolTypeEntity->getId()->toString()])['results'];
+            $rollen = $this->cacheService->searchObjects(['omschrijvingGeneriek' => $role['roltype']['omschrijvingGeneriek'], 'zaaktype' => $zaakType->getSelf()], [$rolTypeEntity->getId()->toString()])['results'];
             if ($rollen !== []) {
                 $this->logger->debug('Role type has been found, connecting to existing role type');
                 $zaakArray['rollen'][$key]['roltype'] = $rollen[0]['_self']['id'];
@@ -306,7 +306,7 @@ class ZdsToZgwService
         $this->logger->debug('Trying to connect case to existing case type');
 
         $zaakTypeEntity = $this->getEntity('https://vng.opencatalogi.nl/schemas/ztc.zaakType.schema.json');
-        $zaaktypes = $this->cacheService->searchObjects(null, ['identificatie' => $zaakArray['zaaktype']['identificatie']], [$zaakTypeEntity->getId()->toString()])['results'];
+        $zaaktypes = $this->cacheService->searchObjects(['identificatie' => $zaakArray['zaaktype']['identificatie']], [$zaakTypeEntity->getId()->toString()])['results'];
         if (count($zaaktypes) > 0) {
             $this->logger->debug('Case type found, connecting case to case type');
 
@@ -352,7 +352,7 @@ class ZdsToZgwService
 
         $zaakArray = $this->convertZaakType($zaakArray);
 
-        $zaken = $this->cacheService->searchObjects(null, ['identificatie' => $zaakArray['identificatie']], [$zaakEntity->getId()->toString()])['results'];
+        $zaken = $this->cacheService->searchObjects(['identificatie' => $zaakArray['identificatie']], [$zaakEntity->getId()->toString()])['results'];
         if (count($zaken) === 1) {
             $this->logger->debug('Populating case with identification '.$zaakArray['identificatie']);
 
@@ -400,8 +400,8 @@ class ZdsToZgwService
 
         $zaakDocumentArray = $this->mappingService->mapping($mapping, $data['body']);
 
-        $documenten = $this->cacheService->searchObjects(null, ['identificatie' => $zaakDocumentArray['informatieobject']['identificatie']], [$documentEntity->getId()->toString()])['results'];
-        $zaken = $this->cacheService->searchObjects(null, ['identificatie' => $zaakDocumentArray['zaak']], [$zaakEntity->getId()->toString()])['results'];
+        $documenten = $this->cacheService->searchObjects(['identificatie' => $zaakDocumentArray['informatieobject']['identificatie']], [$documentEntity->getId()->toString()])['results'];
+        $zaken = $this->cacheService->searchObjects(['identificatie' => $zaakDocumentArray['zaak']], [$zaakEntity->getId()->toString()])['results'];
         if (count($documenten) === 1 && count($zaken) === 1) {
             $this->logger->debug('Populating document with identification'.$zaakDocumentArray['informatieobject']['identificatie']);
 
